@@ -229,17 +229,17 @@ input[type="number"] {
         <img src="https://i.ibb.co/jfScDTC/budget.png" alt="Expense Tracker" />
         <div class="balance-container">
           <h2>Your Balance</h2>
-          <h2 id="balance" class="balance">$0.00</h2>
+          <h2 id="balance" class="balance">${{ current_balance.current_balance }}</h2>
         </div>
       </div>
       <div class="inc-exp-container">
         <div>
           <h4>Income</h4>
-          <p id="money-plus" class="money plus">+$0.00</p>
+          <p id="money-plus" class="money plus" >${{ income }}</p>
         </div>
         <div>
           <h4>Expenses</h4>
-          <p id="money-minus" class="money minus">-$0.00</p>
+          <p id="money-minus" class="money minus">${{ expense }}</p>
         </div>
       </div>
       <h3>History</h3>
@@ -247,8 +247,8 @@ input[type="number"] {
         {% for transaction in transactions %}
         <li class = "{% if transaction.expense_type == 'DEBIT' %} minus {% else %} plus {% endif %}" >
             {{ transaction.description}} <span>{{transaction.amount}}</span> 
-            <button class="delete-btn" onclick="removeTransaction(1)">
-            <i class="fas fa-trash-alt"></i></button>
+            <a class="delete-btn" href="{% url 'delete_transaction' transaction.id %}">
+            <i class="fas fa-trash-alt"></i></a>
         </li>
         {% endfor %}
       </ul>

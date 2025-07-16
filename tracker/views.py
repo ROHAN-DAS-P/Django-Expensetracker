@@ -21,4 +21,36 @@ def index(request):
         current_balance.save()
         print(description, amount)
         return redirect('/')
-    return render(request, 'index.html')
+    
+    current_balance, _ = CurrentBalance.objects.get_or_create(id = 1)
+    income = 0
+    expense = 0
+    
+    for tracking_history in TrackingHistory.objects.all():
+        if tracking_history.expense_type == "CREDIT":
+            income += tracking_history.amount
+        
+        else:
+            expense += tracking_history.amount
+
+
+    context = {'income' : income, 'expense' : expense, 'transactions' : TrackingHistory.objects.all(), 'current_balance' : current_balance}
+    return render(request, 'index.html', context)
+
+
+
+
+def delete_transaction(request, id):
+    tracking_history = TrackingHistory.objects.filter(id = id)
+
+    if tracking_history.exists():
+        current_balance, _ = CurrentBalance.objects.get_or_create(id = 1)
+        tracking_history = tracking_history[0]
+        current_balance.current_balance = current_balance.current_balance - tracking_history.amount
+        current_balance.save()
+
+    
+
+
+    tracking_history.delete()
+    return redirect('/')
